@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Weekly Hours Logger</title>
+  <title>Uren Registratie</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
@@ -88,7 +88,7 @@
 <label>Project:</label>
 <select id="project">
   <option value="">-- Select Project --</option>
-  <option value="HAVIk-development">HAVIk-development</option>
+  <option value="HAVIK-development">HAVIK-development</option>
   <option value="HAVIK-maintaince">HAVIK-maintaince</option>
   <option value="MABEL-developement">MABEL-developement</option>
   <option value="MABEL-maintaince">MABEL-maintaince</option>
@@ -402,7 +402,7 @@ function exportToExcel() {
     ["Generated for:", personName],
     ["Generated on:", new Date().toLocaleString()],
     [],
-    ["Weekly Hours Log"],
+    ["Monthly Hours Log SoDM"],
     ["Person", "Project", "Year", "Week", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Total"]
   ];
 
@@ -523,7 +523,7 @@ function exportToPDF() {
   
   // Add title
   doc.setFontSize(16);
-  doc.text(`Weekly Hours Log - ${personName} - ${currentMonth}`, 14, 15);
+  doc.text(`Monthly Hours Log SoDM - ${personName} - ${currentMonth}`, 14, 15);
   
   // Add project info
   doc.setFontSize(10);
