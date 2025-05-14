@@ -2,63 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Uren Registratie</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
   <style>
+    :root {
+      --primary-color: #2c7be5;
+      --danger-color: #e63757;
+      --border-color: #e3ebf6;
+      --text-color: #12263f;
+      --light-bg: #f9fbfd;
+    }
+    
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
     body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
-      background: #f7f9fb;
-    }
-    input, button, select {
-      padding: 0.4rem;
-      margin: 0.3rem;
-    }
-    table {
-      border-collapse: collapse;
-      margin-top: 1rem;
-      width: 100%;
-      background: #fff;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 0.5rem;
-      text-align: center;
-    }
-    th {
-      background: #e9e9e9;
-    }
-    .delete-btn {
-      color: red;
-      cursor: pointer;
-    }
-    .totals, .info-block {
-      margin-top: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      margin: 0;
       padding: 1rem;
-      background: #ffffff;
-      border: 1px solid #ccc;
+      background: var(--light-bg);
+      color: var(--text-color);
+      line-height: 1.5;
+      -webkit-text-size-adjust: 100%;
     }
-    .info-block h3 {
+    
+    h2, h3 {
       margin-top: 0;
+      color: var(--text-color);
     }
-    .over-hours {
-      color: red;
-      font-weight: bold;
+    
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      font-size: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      background: white;
+      -webkit-appearance: none;
     }
-    .export-buttons {
-      margin-top: 1rem;
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(44, 123, 229, 0.2);
+    }
+    
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      font-size: 1rem;
+      font-weight: 500;
+      color: white;
+      background-color: var(--primary-color);
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background-color: #1a68d1;
+    }
+    
+    .button-group {
       display: flex;
       gap: 0.5rem;
+      margin: 1rem 0;
     }
+    
+    .button-group button {
+      flex: 1;
+    }
+    
+    .info-block, .totals {
+      padding: 1.25rem;
+      margin: 1rem 0;
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .info-block h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    
+    .day-inputs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+    
+    .day-input-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .day-input-group label {
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+      color: #6e84a3;
+    }
+    
+    .day-input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+    
     .holiday {
-      background-color: #ffcccc;
+      background-color: #fff0f0;
     }
-    .signature-area {
-      margin-top: 2rem;
-      padding: 1rem;
-      border-top: 1px solid #000;
+    
+    .over-hours {
+      color: var(--danger-color);
+      font-weight: bold;
+    }
+    
+    .delete-btn {
+      color: var(--danger-color);
+      cursor: pointer;
+      font-weight: bold;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      background: white;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    th, td {
+      padding: 0.75rem;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      font-size: 0.85rem;
+    }
+    
+    th {
+      background-color: #f5f8fa;
+      font-weight: 600;
+    }
+    
+    /* Responsive table container */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Responsive adjustments */
+    @media (min-width: 480px) {
+      .day-inputs {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    
+    @media (min-width: 768px) {
+      .day-inputs {
+        grid-template-columns: repeat(7, 1fr);
+      }
+      
+      body {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+    }
+    
+    /* Remove spinners from number inputs */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    input[type="number"] {
+      -moz-appearance: textfield;
     }
   </style>
 </head>
@@ -95,45 +232,73 @@
   <option value="MAVIK-general">MAVIK-general</option>
 </select>
 
-<label>Year:</label>
-<input type="number" id="year" min="2000" max="2100" />
-
-<label>Week #:</label>
-<input type="number" id="weekNumber" min="1" max="53" onchange="displayCalculatedWeek()" />
-
-<div>
-  <label>Mon:</label><input type="number" id="mon" min="0" step="0.25" class="day-input" />
-  <label>Tue:</label><input type="number" id="tue" min="0" step="0.25" class="day-input" />
-  <label>Wed:</label><input type="number" id="wed" min="0" step="0.25" class="day-input" />
-  <label>Thu:</label><input type="number" id="thu" min="0" step="0.25" class="day-input" />
-  <label>Fri:</label><input type="number" id="fri" min="0" step="0.25" class="day-input" />
-  <label>Sat:</label><input type="number" id="sat" min="0" step="0.25" class="day-input" />
-  <label>Sun:</label><input type="number" id="sun" min="0" step="0.25" class="day-input" />
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+  <div>
+    <label>Year:</label>
+    <input type="number" id="year" min="2000" max="2100" />
+  </div>
+  <div>
+    <label>Week #:</label>
+    <input type="number" id="weekNumber" min="1" max="53" onchange="displayCalculatedWeek()" />
+  </div>
 </div>
 
 <p><strong>Calculated Week:</strong> <span id="calculatedWeekText">N/A</span></p>
 
+<div class="day-inputs">
+  <div class="day-input-group">
+    <label>Mon</label>
+    <input type="number" id="mon" min="0" step="0.25" class="day-input" />
+  </div>
+  <div class="day-input-group">
+    <label>Tue</label>
+    <input type="number" id="tue" min="0" step="0.25" class="day-input" />
+  </div>
+  <div class="day-input-group">
+    <label>Wed</label>
+    <input type="number" id="wed" min="0" step="0.25" class="day-input" />
+  </div>
+  <div class="day-input-group">
+    <label>Thu</label>
+    <input type="number" id="thu" min="0" step="0.25" class="day-input" />
+  </div>
+  <div class="day-input-group">
+    <label>Fri</label>
+    <input type="number" id="fri" min="0" step="0.25" class="day-input" />
+  </div>
+  <div class="day-input-group">
+    <label>Sat</label>
+    <input type="number" id="sat" min="0" step="0.25" class="day-input" />
+  </div>
+  <div class="day-input-group">
+    <label>Sun</label>
+    <input type="number" id="sun" min="0" step="0.25" class="day-input" />
+  </div>
+</div>
+
 <button onclick="addEntry()">Add Entry</button>
 
-<div class="export-buttons">
+<div class="button-group">
   <button onclick="exportToExcel()">Export to Excel</button>
   <button onclick="exportToPDF()">Export to PDF</button>
 </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Person</th>
-      <th>Project</th>
-      <th>Year</th>
-      <th>Week #</th>
-      <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
-      <th>Total</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody id="logTableBody"></tbody>
-</table>
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Person</th>
+        <th>Project</th>
+        <th>Year</th>
+        <th>Week</th>
+        <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+        <th>Total</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="logTableBody"></tbody>
+  </table>
+</div>
 
 <script>
 // Initialize jsPDF
@@ -212,7 +377,7 @@ function loadEntries() {
   const tbody = document.getElementById('logTableBody');
   tbody.innerHTML = '';
   entries.forEach((entry, index) => {
-    const totalClass = entry.total > 36 ? 'class="over-hours"' : '';
+    const totalClass = entry.total > 36 ? 'over-hours' : '';
     const row = `<tr>
       <td>${entry.person}</td>
       <td>${entry.project}</td>
@@ -226,7 +391,7 @@ function loadEntries() {
       <td>${entry.sat}</td>
       <td>${entry.sun}</td>
       <td ${totalClass}>${entry.total}</td>
-      <td><span class="delete-btn" onclick="deleteEntry(${index})">Delete</span></td>
+      <td><button class="delete-btn" onclick="deleteEntry(${index})">×</button></td>
     </tr>`;
     tbody.insertAdjacentHTML('beforeend', row);
   });
